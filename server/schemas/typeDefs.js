@@ -34,7 +34,7 @@ const typeDefs = gql`
     getSingleUser(username: String!, email: String!, password: String!): Auth
     createUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    saveBook(authors: String!, description: String!, image: String!, link: String!, title: String!): Blog
+    saveBook(authors: String!, description: String!, image: String!, link: String!, title: String!): bookSchema
     deleteBook(bookId: ID!): bookSchema
   }
 `;

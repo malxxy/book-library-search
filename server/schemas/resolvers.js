@@ -10,30 +10,29 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-      users: async () => {
-        return User.find().populate('users')
-      },
       user: async (parent, { user }) => {
-        return User.findOne({ user }).populate('users');
-      },
-      //returns all books in database
-      books: async () => {
-        return User.find().populate('books');
-      },
+        if (context.user) {
+          const user = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('books');
+          return user;
+        }
+        throw new AuthenticationError('Not logged in!');
+      }
     },
   
     Mutation: {
+      // I believe this route is correct
       addUser: async (parent, { username, email, password }) => {
         const user = await User.create({ username, email, password });
         const token = signToken(user);
   
         return { token, user };
       },
+      // I believe thi route is correct
       login: async (parent, { email, password }) => {
         const user = await User.findOne({ email });
   
         if (!user) {
-          throw new AuthenticationError('No profile found!');
+          throw new AuthenticationError('Incorrect!');
         }
   
         const correctPw = await profile.isCorrectPassword(password);
@@ -46,14 +45,17 @@ const resolvers = {
         return { token, user };
       },
       saveBook: async (parent, { authors, description, image, link, title }) => {
-        const book = await User.book.create({ authors, description, image, link, title });
-  
-        await User.findOneAndUpdate(
-          { username: username },
-          { $addToSet: { User: book._id } }
-        );
-  
-        return book;
+        if(context.user) {
+          const saveBook = await User.findByIdAndUpdate({ authors, description, image, link, title });
+    
+          await User.findOneAndUpdate(
+            { username: username },
+            { $addToSet: { User: book._id } }
+          );
+    
+          return saveBook;
+        }
+        throw new AuthenticationError('Not logged in!');
       },
       deleteBook: async (parent, { bookId }) => {
         return User.findOneAndDelete({ _id: bookId });

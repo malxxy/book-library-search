@@ -1,5 +1,6 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server');
+// oriinally express packahe but is now depricated
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 

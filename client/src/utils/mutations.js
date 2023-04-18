@@ -44,7 +44,7 @@ export const saveBook = gql`
 
 export const deleteBook = gql`
     mutation deleteBook($authors:[String]!, $description: String!, $image: String!, $link: String!, $title: String!) {
-        deleteBook(authors: $authors, description:$description, image: $$image, link: $link, title: $title) {
+        deleteBook(authors: $authors, description:$description, image: $image, link: $link, title: $title) {
             _id
             username
             email

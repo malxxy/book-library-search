@@ -25,9 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/public')));
-} else if (process.env.NODE_ENV !== 'production'){
-  require('dotenv').config({path:'../.env'})
+  app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
 app.use(routes);

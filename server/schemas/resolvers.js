@@ -36,7 +36,7 @@ const resolvers = {
           throw new AuthenticationError('Incorrect!');
         }
   
-        const correctPw = await profile.isCorrectPassword(password);
+        const correctPw = await user.isCorrectPassword(password);
   
         if (!correctPw) {
           throw new AuthenticationError('Incorrect!');

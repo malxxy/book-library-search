@@ -7,6 +7,7 @@ export const LOGIN = gql`
       email
       password
     }
+    token
   }
 `;
 

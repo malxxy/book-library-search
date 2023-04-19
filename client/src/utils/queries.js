@@ -6,14 +6,14 @@ export const getSingleUser = gql`
           _id
           username
           email
-          bookCount
+          password
           savedBooks {
               bookId
               authors
               description
-              title
               image
               link
+              title
         }
       }
     }

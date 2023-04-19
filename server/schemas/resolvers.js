@@ -11,9 +11,9 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
     Query: {
       // i believe this route is correct
-      user: async (parent, { User }, context) => {
+      user: async (parent, args, context) => {
         if (context.user) {
-          const userInfo = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('books');
+          const userInfo = await User.findOne({ _id: context.user._id }).populate('savedBooks');
           return userInfo;
         }
         throw new AuthenticationError('Not logged in!');
@@ -45,12 +45,12 @@ const resolvers = {
         const token = signToken(user);
         return { token, user };
       },
-      saveBook: async (parent, { authors, description, image, link, title }, context) => {
+      saveBook: async (parent, args, context) => {
         if(context.user) {
           const saveBook = await User.findByIdAndUpdate(
             {_id: context.user._id},
-            { $addToSet: { savedBooks: { authors, description, image, link, title }}},
-            {new: true}
+            { $addToSet: { savedBooks: args}},
+            {new: true, runValidators:true}
             );
     
           return saveBook;
@@ -61,7 +61,7 @@ const resolvers = {
         if(context.user) {
           return User.findByIdAndUpdate(
             { _id: context.user._id },
-            { $pull: {savedBooks: { bookId: bookId}}},
+            { $pull: {savedBooks: bookId}},
             { new: true}
             );
         }

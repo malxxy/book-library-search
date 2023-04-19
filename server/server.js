@@ -6,7 +6,6 @@ const { authMiddleware } = require('./utils/auth');
 // Import the two parts of a GraphQL schema
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
-const routes = require('./routes');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -28,7 +27,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
-app.use(routes);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
   db.once('open', () => {
     app.listen(PORT, () => {
